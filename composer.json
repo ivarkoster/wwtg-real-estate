@@ -1,14 +1,23 @@
 {
     "name": "zendframework/skeleton-application",
-    "description": "Skeleton Application for ZF2",
+    "description": "WWTG Real Estate Application",
     "license": "BSD-3-Clause",
     "keywords": [
-        "framework",
-        "zf2"
+        "wwtg",
+        "ivar koster"
     ],
     "homepage": "http://framework.zend.com/",
+    "minimum-stability": "dev",
     "require": {
+        "Doctrine/doctrine-orm-module" : "dev-master",
         "php": ">=5.3.3",
-        "zendframework/zendframework": "2.*"
+        "zendframework/zendframework": "2.*",
+        "zf-commons/zfc-base": "dev-master",
+        "zf-commons/zfc-admin": "dev-master",
+        "zf-commons/zfc-user": "dev-master",
+        "zf-commons/zfc-user-doctrine-orm": "dev-master",
+        "bjyoungblood/bjy-authorize": "dev-master"
     }
 }
+
+
