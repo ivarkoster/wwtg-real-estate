@@ -9,7 +9,6 @@ return array(
         'ZfcBase',
         'ZfcUser',
         'ZfcUserDoctrineORM',
-        'WwtgPhotoAlbum',
         'WwtgRealEstate'
     ),
     'module_listener_options' => array(
