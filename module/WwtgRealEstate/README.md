@@ -1,0 +1,1 @@
+Thios module will contain the real estate application files of the wwtg-real-estate application
