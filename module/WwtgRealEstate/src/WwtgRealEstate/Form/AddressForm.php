@@ -3,55 +3,45 @@ namespace WwtgRealEstate\Form;
 
 use Zend\Form\Form;
 
-class BrokerForm extends Form {
+class AddressForm extends Form {
 
     public function __construct($name = null){
 
         //we want to ignore the name passed
-        parent::__construct('broker');
+        parent::__construct('address');
         $this->setAttribute('method', 'post');
         $this->add(array(
-            'name' => 'RealEstateBrokerId',
+            'name' => 'AddressId',
             'attributes' => array(
                 'type' => 'hidden',
             ),
         ));
+
         $this->add(array(
-            'name' => 'isApplicationOwner',
-            'attributes' => array(
-                'type' => 'radio',
-            ),
-            'options' => array(
-                'label' => 'Yes',
-                'Value' => '1'
-            ),
-        ));
-        $this->add(array(
-            'name' => 'isApplicationOwner',
-            'attributes' => array(
-                'type' => 'radio',
-            ),
-            'options' => array(
-                'label' => 'No',
-                'Value' => '0'
-            ),
-        ));
-        $this->add(array(
-            'name' => 'name',
+            'name' => 'longitude',
             'attributes' => array(
                 'type' => 'text',
             ),
             'options' => array(
-                'label' => 'Name Broker',
+                'label' => 'Longitude',
             ),
         ));
         $this->add(array(
-            'name' => 'email',
+            'name' => 'latitude',
             'attributes' => array(
-                'type' => 'email',
+                'type' => 'text',
             ),
             'options' => array(
-                'label' => 'E-mail',
+                'label' => 'Latitude',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'street',
+            'attributes' => array(
+                'type' => 'text',
+            ),
+            'options' => array(
+                'label' => 'street',
             ),
         ));
         $this->add(array(
@@ -64,21 +54,39 @@ class BrokerForm extends Form {
             ),
         ));
         $this->add(array(
-            'name' => 'mobile',
+            'name' => 'housenr',
             'attributes' => array(
-                'type' => 'text',
+                'type' => 'integer',
             ),
             'options' => array(
-                'label' => 'mobile',
+                'label' => 'House number',
             ),
         ));
         $this->add(array(
-            'name' => 'phone',
+            'name' => 'housenr_ext',
             'attributes' => array(
                 'type' => 'text',
             ),
             'options' => array(
-                'label' => 'fax',
+                'label' => 'House number extension',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'postcalcode',
+            'attributes' => array(
+                'type' => 'text',
+            ),
+            'options' => array(
+                'label' => 'Postal code',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'state',
+            'attributes' => array(
+                'type' => 'text',
+            ),
+            'options' => array(
+                'label' => 'State',
             ),
         ));
         $this->add(array(
