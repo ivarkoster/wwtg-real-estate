@@ -27,14 +27,14 @@ return array(
             //And finally, here is where we define our page hierarchy
             'Resident' => array(
                 'label' => 'Resident',
-                'route' => 'zfcadmin/real-estate-admin',
+                'route' => 'zfcadmin/resident-admin',
                 'pages' => array(
                     'Add' => array(
-                        'label' => 'real-estate',
+                        'label' => 'Add Resident',
                         'route' => 'add',
                     ),
                     'Delete' => array(
-                        'label' => 'real-estate',
+                        'label' => 'Delete Resident',
                         'route' => 'delete',
                     ),
                 ),
