@@ -20,7 +20,7 @@ use Zend\InputFilter\InputFilterInterface;
 * @property string $latitude
 * @property string $street
 * @property string $housenr
-* @property string $housenr_ext
+* @property string $housenrExt
 * @property string $postalcode
 * @property string $city
 * @property string $state
@@ -58,12 +58,42 @@ class Album implements InputFilterAwareInterface
     /**
      * @ORM\Column(length=45)
      */
-    protected $title;
+    protected $longitude;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(length=45)
      */
-    protected $active;
+    protected $latitude;
+
+    /**
+     * @ORM\Column(length=45)
+     */
+    protected $street;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $housenr;
+
+    /**
+     * @ORM\Column(length=5)
+     */
+    protected $housenrExt;
+
+    /**
+     * @ORM\Column(length=45)
+     */
+    protected $postalcode;
+
+    /**
+     * @ORM\Column(length=45)
+     */
+    protected $city;
+
+    /**
+     * @ORM\Column(length=45)
+     */
+    protected $state;
 
     /**
      * @OneToMany(targetEntity="Broker", mappedBy="address") @var addressBroker[]

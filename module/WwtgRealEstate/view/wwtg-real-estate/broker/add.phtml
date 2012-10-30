@@ -1,0 +1,46 @@
+<?php
+use Zend\View\Helper\EscapeHtml;
+
+$title = 'Add new broker';
+$this->headTitle($title);
+?>
+
+<h1><?php echo $this->escapeHtml($title)?></h1>
+<?php
+$brokerForm = $this->brokerForm;
+$countryForm = $this->countryForm;
+$brokerForm->setAttribute('action', $this->url('wwtg-real-estate', array('action' => 'add')));
+$brokerForm->prepare();
+?>
+
+
+
+<?php echo $this->form()->openTag($brokerForm); ?>
+<div >
+
+<?php echo $this->formHidden($brokerForm->get('RealEstateBrokerId')); ?>
+
+<?php echo $this->formRadio($brokerForm->get('isApplicationOwner')); ?>
+
+<?php echo $this->formRow($brokerForm->get('name')); ?>
+
+<?php echo $this->formRow($brokerForm->get('email')); ?>
+
+<?php echo $this->formRow($brokerForm->get('phone')); ?>
+
+<?php echo $this->formRow($brokerForm->get('mobile')); ?>
+
+
+
+<?php echo $this->formSelect($countryForm->get('name')); ?>
+
+<?php echo $this->formSubmit($brokerForm->get('submit')); ?>
+
+<?php echo $this->form()->closeTag($brokerForm); ?>
+
+
+
+
+
+
+</div>

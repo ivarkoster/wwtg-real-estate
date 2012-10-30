@@ -8,11 +8,12 @@ use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
-* Photos
+* Country
 *
+* @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\CountryRepository")
 * @ORM\Table(name="country")
 * @property int $CountryId
-* @property string $countryName
+* @property string $name
 */
 class Country implements InputFilterAwareInterface
 {
@@ -29,19 +30,15 @@ class Country implements InputFilterAwareInterface
      */
     protected $CountryId;
 
-
     /**
      * @ORM\Column(type="string")
      */
-    protected $countryName;
-
+    protected $name;
 
     /**
-     * @OneToMany(targetEntity="Address", mappedBy="country") @var $countryAddress[]
+     * @ORM\OneToMany(targetEntity="Address", mappedBy="country") @var $countryAddress[]
      */
     protected $countryAddress = null;
-
-
 
     /**
      * Magic getter to expose protected properties
@@ -66,7 +63,6 @@ class Country implements InputFilterAwareInterface
         $this->$property = $value;
     }
 
-
     /**
      * Conver the object to an array.
      *
@@ -77,7 +73,6 @@ class Country implements InputFilterAwareInterface
         return get_object_vars($this);
     }
 
-
     /**
      * Populate $this from an array
      *
@@ -86,8 +81,8 @@ class Country implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->CountryId   = $data['CountryId'];
-        $this->countryName = $data['countryName'];
+        $this->CountryId = $data['CountryId'];
+        $this->name      = $data['name'];
     }
 
     /* (non-PHPdoc)
@@ -120,7 +115,7 @@ class Country implements InputFilterAwareInterface
 
             //input filter for name of broker
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'countryName',
+                'name'     => 'name',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),

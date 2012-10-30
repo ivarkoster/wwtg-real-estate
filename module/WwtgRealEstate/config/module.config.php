@@ -1,9 +1,11 @@
 <?php
+namespace WwtgRealEstate;
+
 return array(
     'controllers' => array(
         'invokables' => array(
             'WwtgRealEstate\Controller\RealEstate' => 'WwtgRealEstate\Controller\RealEstateController',
-            'WwtgRealEstate\Controller\RealEstateBroker' => 'WwtgRealEstate\Controller\RealEstateBrokerController',
+            'WwtgRealEstate\Controller\Broker' => 'WwtgRealEstate\Controller\BrokerController',
             'WwtgRealEstate\Controller\AdminResident' => 'WwtgRealEstate\Controller\AdminResidentController',
         ),
     ),

@@ -18,22 +18,13 @@ class BrokerForm extends Form {
         ));
         $this->add(array(
             'name' => 'isApplicationOwner',
-            'attributes' => array(
-                'type' => 'radio',
-            ),
+            'type' => 'Zend\Form\Element\Radio',
             'options' => array(
-                'label' => 'Yes',
-                'Value' => '1'
-            ),
-        ));
-        $this->add(array(
-            'name' => 'isApplicationOwner',
-            'attributes' => array(
-                'type' => 'radio',
-            ),
-            'options' => array(
-                'label' => 'No',
-                'Value' => '0'
+                'label' => 'Owner of application (thus show listings on frontend) ?',
+                'value_options' => array(
+                    '1' => 'Yes',
+                    '0' => 'No',
+                ),
             ),
         ));
         $this->add(array(

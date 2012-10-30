@@ -11,7 +11,10 @@ namespace WwtgRealEstate\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use WwtgRealEstate\Form\BrokerForm;
+use WwtgRealEstate\Form\CountryForm;
+use Doctrine\ORM\EntityManager;
 use WwtgRealEstate\Entity\Broker;
+use WwtgRealEstate\Entity\Country;
 
 class BrokerController extends AbstractActionController
 {
@@ -41,7 +44,7 @@ class BrokerController extends AbstractActionController
     public function getEntityManager()
     {
         if (null === $this->em) {
-            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager') ;
         }
         return $this->em;
     }
@@ -55,25 +58,38 @@ class BrokerController extends AbstractActionController
     public function addAction()
     {
 
-        $brokerFoorm = new BrokerForm();
-        $brokerFoorm->get('submit')->setAttribute('label', 'Add');
+        $brokerForm = new BrokerForm();
+        $brokerForm->get('submit')->setAttribute('label', 'Add');
+
+
+        $countryForm = new CountryForm();
+        $countryOptions = $this->getEntityManager()
+            ->getRepository('WwtgRealEstate\Entity\Country')
+            ->selectOptionsArray();
+        $countryForm->get('name')->setValueOptions($countryOptions);
+
+        //$locationForm = new CountryForm();
+        //$areaForm = new CountryForm();
 
         $request = $this->getRequest();
         if ($request->isPost()) {
             $broker = new Broker();
-            $brokerFoorm->setInputFilter($album->getInputFilter());
-            $brokerFoorm->setData($request->getPost());
+            $brokerForm->setInputFilter($album->getInputFilter());
+            $brokerForm->setData($request->getPost());
 
-            if ($brokerFoorm->isValid()) {
+            if ($brokerForm->isValid()) {
                 $broker->populate($form->getData());
                 $this->getEntityManager()->persist($broker);
                 $this->getEntityManager()->flush();
 
                 //redirect to list of albums
-                return $this->redirect()->toRoute('album');
+                return $this->redirect()->toRoute('real-estate');
             }
         }
 
-        return array('form' => $form);
+        return array(
+            'brokerForm' => $brokerForm,
+            'countryForm' => $countryForm,
+        );
     }
 }
