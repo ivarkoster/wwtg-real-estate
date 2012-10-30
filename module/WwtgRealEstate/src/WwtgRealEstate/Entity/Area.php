@@ -8,11 +8,12 @@ use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
-* Photos
+* Area
 *
+* @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\AreaRepository")
 * @ORM\Table(name="area")
-* @property int $LocatioNID
-* @property string $locationName
+* @property int $AreaID
+* @property string $name
 */
 class Area implements InputFilterAwareInterface
 {
@@ -33,7 +34,7 @@ class Area implements InputFilterAwareInterface
     /**
      * @ORM\Column(type="string")
      */
-    protected $areaName;
+    protected $name;
 
 
     /**

@@ -58,27 +58,50 @@ class BrokerController extends AbstractActionController
     public function addAction()
     {
 
+        //haal de Broker Web Form op en verander de submit label
         $brokerForm = new BrokerForm();
         $brokerForm->get('submit')->setAttribute('label', 'Add');
 
+        $addressForm = new AddressForm();
 
-        $countryForm = new CountryForm();
+        //haal de Country Web Form op en vul de landen select box met aanwezige landen
+        $addressForm = new AddressForm();
+        //set countryname select options
         $countryOptions = $this->getEntityManager()
             ->getRepository('WwtgRealEstate\Entity\Country')
             ->selectOptionsArray();
-        $countryForm->get('name')->setValueOptions($countryOptions);
+        $addressForm->get('countryName')->setValueOptions($countryOptions);
 
-        //$locationForm = new CountryForm();
-        //$areaForm = new CountryForm();
+        //set LocationName select options
+        $locationOptions = $this->getEntityManager()
+            ->getRepository('WwtgRealEstate\Entity\Location')
+            ->selectOptionsArray();
+        $addressForm->get('locationName')->setValueOptions($locationOptions);
+
+        //set AreaName select options
+        $areaOptions = $this->getEntityManager()
+            ->getRepository('WwtgRealEstate\Entity\Area')
+            ->selectOptionsArray();
+        $addressForm->get('locationName')->setValueOptions($areaOptions);
+
 
         $request = $this->getRequest();
         if ($request->isPost()) {
+
+
             $broker = new Broker();
-            $brokerForm->setInputFilter($album->getInputFilter());
+            $brokerForm->setInputFilter($broker->getInputFilter());
             $brokerForm->setData($request->getPost());
 
-            if ($brokerForm->isValid()) {
-                $broker->populate($form->getData());
+            $address = new Address();
+            $addressForm->setInputFilter($address->getInputFilter());
+            $addressForm->setData($request->getPost());
+
+            if ($brokerForm->isValid() && $countryForm->isValid()) {
+
+                $broker->populate($brokerForm->getData());
+
+
                 $this->getEntityManager()->persist($broker);
                 $this->getEntityManager()->flush();
 
@@ -89,7 +112,7 @@ class BrokerController extends AbstractActionController
 
         return array(
             'brokerForm' => $brokerForm,
-            'countryForm' => $countryForm,
+            'addressForm' => $addressForm,
         );
     }
 }

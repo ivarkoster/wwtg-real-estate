@@ -97,6 +97,28 @@ class AddressForm extends Form {
                 'id' => 'submitbutton',
             ),
         ));
+        $this->add(array(
+            'name' => 'countryName',
+            'type' => 'Zend\Form\Element\Select',
+            'options' => array(
+                'label' => 'Country',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'locationName',
+            'type' => 'Zend\Form\Element\Select',
+            'options' => array(
+                'label' => 'Location',
+            ),
+        ));
+        $this->add(array(
+            'name' => 'areaName',
+            'type' => 'Zend\Form\Element\Select',
+            'options' => array(
+                'label' => 'Area',
+            ),
+        ));
+
 
     }
 
