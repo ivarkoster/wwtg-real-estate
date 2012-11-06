@@ -32,7 +32,7 @@ class Area implements InputFilterAwareInterface
 
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length="45")
      */
     protected $name;
 
@@ -87,8 +87,8 @@ class Area implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->AreaId   = $data['AreaId'];
-        $this->areaName = $data['areaName'];
+        $this->area_id   = $data['area_id'];
+        $this->area_name = $data['area_name'];
     }
 
     /* (non-PHPdoc)
@@ -112,7 +112,7 @@ class Area implements InputFilterAwareInterface
 
             //input filter for broker Id
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'AreaID',
+                'name'     => 'area_id',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'Int'),
@@ -121,7 +121,7 @@ class Area implements InputFilterAwareInterface
 
             //input filter for name of broker
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'areaName',
+                'name'     => 'area_name',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),

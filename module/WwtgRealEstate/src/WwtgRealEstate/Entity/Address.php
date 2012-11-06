@@ -12,15 +12,15 @@ use Zend\InputFilter\InputFilterInterface;
 *
 * @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\AddressRepository")
 * @ORM\Table(name="address")
-* @property int $AddressId
-* @property int $CountryId
-* @property int $AreaId
-* @property int $LocationId
+* @property int $address_id
+* @property int $country_id
+* @property int $area_id
+* @property int $location_id
 * @property string $longitude
 * @property string $latitude
 * @property string $street
 * @property string $housenr
-* @property string $housenrExt
+* @property string $housenr_ext
 * @property string $postalcode
 * @property string $city
 * @property string $state
@@ -38,7 +38,7 @@ class Album implements InputFilterAwareInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $AddressId;
+    protected $address_id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Country", inversedBy="countryAddress")
@@ -56,17 +56,17 @@ class Album implements InputFilterAwareInterface
     protected $location;
 
     /**
-     * @ORM\Column(length=45)
+     * @ORM\Column(type="string", length=45)
      */
     protected $longitude;
 
     /**
-     * @ORM\Column(length=45)
+     * @ORM\Column(type="string", length=45)
      */
     protected $latitude;
 
     /**
-     * @ORM\Column(length=45)
+     * @ORM\Column(type="string", length=45)
      */
     protected $street;
 
@@ -76,22 +76,22 @@ class Album implements InputFilterAwareInterface
     protected $housenr;
 
     /**
-     * @ORM\Column(length=5)
+     * @ORM\Column(type="string", length=5)
      */
-    protected $housenrExt;
+    protected $housenr_ext;
 
     /**
-     * @ORM\Column(length=45)
+     * @ORM\Column(type="string", length=15)
      */
     protected $postalcode;
 
     /**
-     * @ORM\Column(length=45)
+     * @ORM\Column(type="string", length=45)
      */
     protected $city;
 
     /**
-     * @ORM\Column(length=45)
+     * @ORM\Column(type="string", length=45)
      */
     protected $state;
 
@@ -151,9 +151,17 @@ class Album implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->id     = $data['id'];
-        $this->artist = $data['artist'];
-        $this->title  = $data['title'];
+        $this->address     = $data['address'];
+        $this->country     = $data['country'];
+        $this->area        = $data['area'];
+        $this->location    = $data['area'];
+        $this->longitude   = $data['longitude'];
+        $this->latitude    = $data['latitude'];
+        $this->street      = $data['street'];
+        $this->housenr     = $data['housenr'];
+        $this->housenr_ext = $data['housenr_ext'];
+        $this->city        = $data['city'];
+        $this->state       = $data['state'];
     }
 
     /* (non-PHPdoc)
@@ -183,8 +191,8 @@ class Album implements InputFilterAwareInterface
             )));
 
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'title',
-                'required' => true,
+                'name'     => 'longitude',
+                'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
@@ -202,12 +210,133 @@ class Album implements InputFilterAwareInterface
             )));
 
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'active',
-                'required' => true,
+                'name'     => 'latitude',
+                'required' => false,
                 'filters'  => array(
-                    array('name' => 'Bool'),
-                )
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 45,
+                        ),
+                    ),
+                ),
             )));
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'street',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 45,
+                        ),
+                    ),
+                ),
+            )));
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'housenr',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'Int'),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'Between',
+                        'options' => array(
+                            'min' => 1,
+                        ),
+                    ),
+                ),
+            )));
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'housenr_ext',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 5,
+                        ),
+                    ),
+                ),
+            )));
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'postalcode',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 15,
+                        ),
+                    ),
+                ),
+            )));
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'city',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 45,
+                        ),
+                    ),
+                ),
+            )));
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'state',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 45,
+                        ),
+                    ),
+                ),
+            )));
+
 
             $this->inputFilter = $inputFilter;
         }

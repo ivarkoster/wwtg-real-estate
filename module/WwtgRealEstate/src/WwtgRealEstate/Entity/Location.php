@@ -12,8 +12,8 @@ use Zend\InputFilter\InputFilterInterface;
 *
 * @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\LocationRepository")
 * @ORM\Table(name="location")
-* @property int $LocationID
-* @property string $name
+* @property int $location_id
+* @property string $location_name
 */
 class Location implements InputFilterAwareInterface
 {
@@ -28,13 +28,13 @@ class Location implements InputFilterAwareInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $LocationId;
+    protected $location_id;
 
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=45)
      */
-    protected $name;
+    protected $location_name;
 
 
     /**
@@ -87,8 +87,8 @@ class Location implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->LocationId   = $data['LocationId'];
-        $this->locationName = $data['locationName'];
+        $this->location_id   = $data['location_id'];
+        $this->location_name = $data['location_name'];
     }
 
     /* (non-PHPdoc)
@@ -112,7 +112,7 @@ class Location implements InputFilterAwareInterface
 
             //input filter for broker Id
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'LocationId',
+                'name'     => 'location_id',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'Int'),
@@ -121,7 +121,7 @@ class Location implements InputFilterAwareInterface
 
             //input filter for name of broker
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'locationName',
+                'name'     => 'location_name',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),

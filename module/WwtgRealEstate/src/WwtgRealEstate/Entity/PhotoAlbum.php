@@ -12,7 +12,7 @@ use Zend\InputFilter\InputFilterInterface;
 *
 * @ORM\Entity(repositoryClass="PhotoAlbum\Repositories\PhotoAlbumRepository")
 * @ORM\Table(name="photoalbum")
-* @property int $id
+* @property int $photoalbum_id
 * @property int $parent
 * @property string $title
 * @property boolean $active
@@ -33,11 +33,6 @@ class Album implements InputFilterAwareInterface
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PhotoAlbum", inversedBy="albumChilds")
-     */
-    protected $parent;
-
-    /**
      * @ORM\Column(length=45)
      */
     protected $title;
@@ -46,6 +41,13 @@ class Album implements InputFilterAwareInterface
      * @ORM\Column(type="boolean")
      */
     protected $active;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="PhotoAlbum", inversedBy="albumChilds")
+     */
+    protected $parent;
+
 
     /**
      * @OneToMany(targetEntity="Photo", mappedBy="photo") @var Bug[]

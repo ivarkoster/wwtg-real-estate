@@ -11,10 +11,10 @@ use Zend\InputFilter\InputFilterInterface;
 * Photos
 *
 * @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\BrokerRepository")
-* @ORM\Table(name="realEstateBroker")
-* @property int $RealEstateBrokerId
-* @property int $AddressId
-* @property int $isApplicationOwner
+* @ORM\Table(name="realestate_broker")
+* @property int $realestate_broker_d
+* @property int $address_id
+* @property int $is_application_owner
 * @property string $name
 * @property string $email
 * @property string $phone
@@ -35,7 +35,7 @@ class Broker implements InputFilterAwareInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $RealEstateBrokerId;
+    protected $realestate_broker_id;
 
     /**
      * @ORM\ManyToOne(targetEntity="address", inversedBy="addressBroker")
@@ -43,14 +43,14 @@ class Broker implements InputFilterAwareInterface
     protected $address;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
-    protected $isApplicationOwner;
+    protected $is_application_owner;
 
     /**
      * @ORM\Column(type="string")
      */
-    protected $name;
+    protected $broker_name;
 
     /**
      * @ORM\Column(type="string")
@@ -123,13 +123,13 @@ class Broker implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->RealEstateBrokerId = $data['RealEstateBrokerId'];
-        $this->isApplicationOwner = $data['isApplicationOwner'];
-        $this->name               = $data['name'];
-        $this->email              = $data['email'];
-        $this->phone              = $data['phone'];
-        $this->mobile             = $data['mobile'];
-        $this->fax                = $data['fax'];
+        $this->realestate_broker_id = $data['realestate_broker_id'];
+        $this->is_pplication_owner  = $data['is_application_owner'];
+        $this->name                 = $data['name'];
+        $this->email                = $data['email'];
+        $this->phone                = $data['phone'];
+        $this->mobile               = $data['mobile'];
+        $this->fax                  = $data['fax'];
     }
 
 
@@ -201,7 +201,7 @@ class Broker implements InputFilterAwareInterface
                         ),
                     ),
                     array(
-                        'name'    => "EmailAddress",
+                        'name'=> "EmailAddress",
                     ),
                 ),
             )));
@@ -240,7 +240,7 @@ class Broker implements InputFilterAwareInterface
 
             //input filter for FAX
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'mobile',
+                'name'     => 'fax',
                 'required' => false,
                 'filters'  => array(
                     array('name' => 'StripTags'),

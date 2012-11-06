@@ -12,11 +12,13 @@ use Zend\InputFilter\InputFilterInterface;
 *
 * @ORM\Entity(repositoryClass="PhotoAlbum\Repositories\PhotoAAlbumRepository")
 * @ORM\Table(name="photoalbum")
-* @property int $id
+* @property int $photo_id
 * @property int $filename
 * @property string $title
-* @property datetime $created
-* @property string $uploadIp
+* @property datetime $upload_date
+* @property string $upload_ip
+* @property int $volgorde
+* @property int $is360
 */
 class Album implements InputFilterAwareInterface
 {
@@ -31,18 +33,42 @@ class Album implements InputFilterAwareInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    protected $photo_id;
+
+    /**
+     * @ORM\Column(type="string", length=45)
+     */
+    protected $filename;
+
+    /**
+     * @ORM\Column(type="string", length=45)
+     */
+    protected $title;
+
+    /**
+     * @ORM\Column(type="string", length=45)
+     */
+    protected $upload_date;
+
+    /**
+     * @ORM\Column(type="string", length=45)
+     */
+    protected $upload_ip;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $order;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $is360;
 
     /**
      * @ORM\ManyToOne(targetEntity="PhotoAlbum", inversedBy="albumPhotos")
      */
     protected $photoAlbum;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $title;
-
 
 
     /**
@@ -94,9 +120,13 @@ class Album implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->id     = $data['id'];
-        $this->artist = $data['artist'];
-        $this->title  = $data['title'];
+        $this->photo_id    = $data['photo_id'];
+        $this->filename    = $data['filename'];
+        $this->title       = $data['title'];
+        $this->upload_date = $data['upload_date'];
+        $this->upload_ip   = $data['upload_ip'];
+        $this->volgorde    = $data['volgorde'];
+        $this->is360       = $data['is360'];
     }
 
     /* (non-PHPdoc)
@@ -126,7 +156,7 @@ class Album implements InputFilterAwareInterface
             )));
 
             $inputFilter->add($factory->createInput(array(
-                'name'     => 'title',
+                'name'     => 'filename',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
@@ -143,6 +173,95 @@ class Album implements InputFilterAwareInterface
                     ),
                 ),
             )));
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'title',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 45,
+                        ),
+                    ),
+                ),
+            )));
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'upload_date',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 21,
+                        ),
+                    ),
+                ),
+            )));
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'upload_ip',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "StringLength",
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 45,
+                        ),
+                    ),
+                ),
+            )));
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'volgorde',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'Int'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "Between",
+                        'options' => array(
+                            'min'      => 0,
+                            'max'      => 255,
+                        ),
+                    ),
+                ),
+            )));
+
+            $inputFilter->add($factory->createInput(array(
+                'name'     => 'is360',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'Int'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => "Between",
+                        'options' => array(
+                            'min'      => 0,
+                            'max'      => 1,
+                        ),
+                    ),
+                ),
+            )));
+
 
             $this->inputFilter = $inputFilter;
         }

@@ -12,8 +12,8 @@ use Zend\InputFilter\InputFilterInterface;
 *
 * @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\CountryRepository")
 * @ORM\Table(name="country")
-* @property int $CountryId
-* @property string $name
+* @property int $country_id
+* @property string $country_name
 */
 class Country implements InputFilterAwareInterface
 {
@@ -28,12 +28,12 @@ class Country implements InputFilterAwareInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $CountryId;
+    protected $country_id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=45)
      */
-    protected $name;
+    protected $country_name;
 
     /**
      * @ORM\OneToMany(targetEntity="Address", mappedBy="country") @var $countryAddress[]
@@ -81,8 +81,8 @@ class Country implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->CountryId = $data['CountryId'];
-        $this->name      = $data['name'];
+        $this->country_id   = $data['country_id'];
+        $this->country_name = $data['country_name'];
     }
 
     /* (non-PHPdoc)

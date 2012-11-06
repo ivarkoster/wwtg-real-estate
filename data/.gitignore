@@ -2,3 +2,4 @@ local.php
 *.local.php
 *.bak
 local.*.txt
+*.bak
