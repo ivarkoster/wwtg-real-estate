@@ -1,7 +1,3 @@
-@echo off
-pushd .
-cd %~dp0
-cd "../zendframework/zendframework/bin"
-set BIN_TARGET=%CD%\classmap_generator.php
-popd
+@ECHO OFF
+SET BIN_TARGET=%~dp0\"../zendframework/zendframework/bin"\classmap_generator.php
 php "%BIN_TARGET%" %*

@@ -2,10 +2,45 @@
 namespace WwtgRealEstate\Form;
 
 use Zend\Form\Form;
+use Doctrine\ORM\EntityManager;
+use WwtgRealEstate\Entity\Country;
 
 class AddressForm extends Form {
 
+    /**
+     * @var Doctrine\ORM\EntityManager
+     */
+    protected $em;
+
+    /**
+     * Setter voor $em property
+     *
+     * @param EntitiyManager $em
+     * @return void
+     */
+    public function setEntityManager(EntitiyManager $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * Retourneerd de Doctrine Entitymanager
+     *
+     * @param EntitiyManager $em
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        if (null === $this->em) {
+            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager') ;
+        }
+        return $this->em;
+    }
+
+
     public function __construct($name = null){
+
+
 
         //we want to ignore the name passed
         parent::__construct('address');
@@ -97,6 +132,8 @@ class AddressForm extends Form {
                 'id' => 'submitbutton',
             ),
         ));
+
+
         $this->add(array(
             'name' => 'countryName',
             'type' => 'Zend\Form\Element\Select',
@@ -104,6 +141,12 @@ class AddressForm extends Form {
                 'label' => 'Country',
             ),
         ));
+
+        //set LocationName select options
+        $locationOptions = $this->getEntityManager()
+            ->getRepository('WwtgRealEstate\Entity\Location')
+            ->selectOptionsArray();
+
         $this->add(array(
             'name' => 'locationName',
             'type' => 'Zend\Form\Element\Select',

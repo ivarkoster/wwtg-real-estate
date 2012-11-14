@@ -10,11 +10,11 @@
 namespace WwtgRealEstate\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use WwtgRealEstate\Form\BrokerForm;
-use WwtgRealEstate\Form\CountryForm;
+use Zend\Form\Annotation\AnnotationBuilder;
 use Doctrine\ORM\EntityManager;
 use WwtgRealEstate\Entity\Broker;
 use WwtgRealEstate\Entity\Country;
+use WwtgRealEstate\Entity\Address;
 
 class BrokerController extends AbstractActionController
 {
@@ -49,11 +49,41 @@ class BrokerController extends AbstractActionController
         return $this->em;
     }
 
-
     public function indexAction()
     {
         return array();
     }
+
+    public function testAction()
+    {
+        $address = new Address();
+        $builder     = new AnnotationBuilder();
+        $addressForm = $builder->createForm($address);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            $addressForm->bind($address);
+            $addressForm->setData($request->getPost());
+
+            if ( $addressForm->isValid() ) {
+
+                print_r($address);
+
+                $this->getEntityManager()->persist($address);
+                $this->getEntityManager()->flush();
+
+                //redirect to list of albums
+                return $this->redirect()->toRoute('real-estate');
+            }
+        }
+
+        return array(
+            'error' => $addressForm->getMessages(),
+            'addressForm' => $addressForm,
+        );
+    }
+
 
     public function addAction()
     {
@@ -72,10 +102,7 @@ class BrokerController extends AbstractActionController
             ->selectOptionsArray();
         $addressForm->get('countryName')->setValueOptions($countryOptions);
 
-        //set LocationName select options
-        $locationOptions = $this->getEntityManager()
-            ->getRepository('WwtgRealEstate\Entity\Location')
-            ->selectOptionsArray();
+
         $addressForm->get('locationName')->setValueOptions($locationOptions);
 
         //set AreaName select options

@@ -38,7 +38,7 @@ class Location implements InputFilterAwareInterface
 
 
     /**
-     * @OneToMany(targetEntity="Address", mappedBy="location") @var $locationAddress[]
+     * @ORM\OneToMany(targetEntity="Address", mappedBy="location") @var $locationAddress[]
      */
     protected $locationAddress = null;
 

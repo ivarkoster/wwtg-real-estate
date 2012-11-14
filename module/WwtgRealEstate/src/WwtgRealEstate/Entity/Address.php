@@ -1,111 +1,138 @@
 <?php
 namespace WwtgRealEstate\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
+use Zend\Form\Annotation;
+use wtgRealEstate\Entity\Broker;
 
 /**
 * A photo album.
 *
-* @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\AddressRepository")
+* @ORM\Entity
 * @ORM\Table(name="address")
-* @property int $address_id
-* @property int $country_id
-* @property int $area_id
-* @property int $location_id
-* @property string $longitude
-* @property string $latitude
-* @property string $street
-* @property string $housenr
-* @property string $housenr_ext
-* @property string $postalcode
-* @property string $city
-* @property string $state
+* @Annotation\name("Address")
+* @Annotation\Hydrator("Zend\stdlib\Hydrator\ObjectProperty")
+* @
 */
-class Album implements InputFilterAwareInterface
+class Address
 {
-
-    /**
-     * @var Zend\InputFilter\InputFilter
-     */
-    protected $inputFilter;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Annotation\Exclude()
      */
     protected $address_id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Country", inversedBy="countryAddress")
+     * @Annotation\Exclude()
      */
     protected $country;
 
     /**
      * @ORM\ManyToOne(targetEntity="Area", inversedBy="areaAddress")
+     * @Annotation\Exclude()
      */
     protected $area;
 
     /**
      * @ORM\ManyToOne(targetEntity="Location", inversedBy="locationAddress")
+     * @Annotation\Exclude()
      */
     protected $location;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Annotation\Required(false)
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Longitude:"})
      */
     protected $longitude;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Annotation\Required(false)
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Latitude:"})
      */
     protected $latitude;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Annotation\Type("Zend\Form\Element\Email")
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Options({"label":"Streetname:"})
+     * @Annotation\ErrorMessage("E-mail address did not validate")
      */
     protected $street;
 
     /**
      * @ORM\Column(type="integer")
+     * @Annotation\Filter({"name":"Int"})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"House number:"})
      */
     protected $housenr;
 
     /**
      * @ORM\Column(type="string", length=5)
+     * @Annotation\Required(false)
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":5}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Extension:"})
      */
     protected $housenr_ext;
 
     /**
      * @ORM\Column(type="string", length=15)
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":15}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Postalcode:"})
      */
     protected $postalcode;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"City:"})
+     * @Annotation\ErrorMessage("Could not validate E-mail address")
      */
     protected $city;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Required(false)
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"State:"})
      */
     protected $state;
 
     /**
-     * @OneToMany(targetEntity="Broker", mappedBy="address") @var addressBroker[]
+     * @ORM\OneToMany(targetEntity="Broker", mappedBy="address") @var addressBroker[]
+     * @Annotation\Exclude()
      */
     protected $addressBroker = null;
 
-
+    /**
+     * constructor
+     */
     public function __construct()
     {
         $this->addressBroker = new ArrayCollection();
     }
-
 
     /**
      * Magic getter to expose protected properties
@@ -130,8 +157,6 @@ class Album implements InputFilterAwareInterface
         $this->$property = $value;
     }
 
-
-
     /**
      * Conver the object to an array.
      *
@@ -140,208 +165,6 @@ class Album implements InputFilterAwareInterface
     public function getArrayCopy()
     {
         return get_object_vars($this);
-    }
-
-
-    /**
-     * Populate $this from an array
-     *
-     * @param array $data
-     * @return void
-     */
-    public function populate($data = array())
-    {
-        $this->address     = $data['address'];
-        $this->country     = $data['country'];
-        $this->area        = $data['area'];
-        $this->location    = $data['area'];
-        $this->longitude   = $data['longitude'];
-        $this->latitude    = $data['latitude'];
-        $this->street      = $data['street'];
-        $this->housenr     = $data['housenr'];
-        $this->housenr_ext = $data['housenr_ext'];
-        $this->city        = $data['city'];
-        $this->state       = $data['state'];
-    }
-
-    /* (non-PHPdoc)
-     * @see Zend\InputFilter.InputFilterAwareInterface::setInputFilter()
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception('Not used');
-    }
-
-
-    /* (non-PHPdoc)
-     * @see Zend\InputFilter.InputFilterAwareInterface::getInputFilter()
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'AddressId',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'Int'),
-                )
-            )));
-
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'longitude',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 45,
-                        ),
-                    ),
-                ),
-            )));
-
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'latitude',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 45,
-                        ),
-                    ),
-                ),
-            )));
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'street',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 45,
-                        ),
-                    ),
-                ),
-            )));
-
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'housenr',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'Int'),
-                ),
-                'validators' => array(
-                    array(
-                        'name' => 'Between',
-                        'options' => array(
-                            'min' => 1,
-                        ),
-                    ),
-                ),
-            )));
-
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'housenr_ext',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 5,
-                        ),
-                    ),
-                ),
-            )));
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'postalcode',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 15,
-                        ),
-                    ),
-                ),
-            )));
-
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'city',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 45,
-                        ),
-                    ),
-                ),
-            )));
-
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'state',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 45,
-                        ),
-                    ),
-                ),
-            )));
-
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
     }
 
 }

@@ -1,7 +1,3 @@
-@echo off
-pushd .
-cd %~dp0
-cd "../phpunit/phpunit/composer/bin"
-set BIN_TARGET=%CD%\phpunit
-popd
+@ECHO OFF
+SET BIN_TARGET=%~dp0\"../phpunit/phpunit/composer/bin"\phpunit
 php "%BIN_TARGET%" %*
