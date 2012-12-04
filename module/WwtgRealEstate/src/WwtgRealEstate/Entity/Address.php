@@ -119,7 +119,7 @@ class Address
     protected $state;
 
     /**
-     * @ORM\OneToMany(targetEntity="Broker", mappedBy="address_id") @var brokerAddress[]
+     * @ORM\OneToMany(targetEntity="Broker", mappedBy="address") @var brokerAddress[]
      * @Annotation\Exclude()
      */
     protected $brokerAddress = null;
