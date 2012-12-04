@@ -81,13 +81,8 @@ class BrokerController extends AbstractActionController
 
             if ( $addresFormValid &&  $brokerFormValid ) {
 
-
-                $this->getEntityManager()->persist($address);
-                $this->getEntityManager()->flush();
-
                 $broker->setAddress($address);
                 $this->getEntityManager()->persist($broker);
-
                 $this->getEntityManager()->flush();
 
 

@@ -14,7 +14,6 @@ use WwtgRealEstate\Entity\Area;
 * @ORM\Table(name="address")
 * @Annotation\name("Address")
 * @Annotation\Hydrator("Zend\stdlib\Hydrator\ObjectProperty")
-* @
 */
 class Address
 {
