@@ -1,21 +1,17 @@
 <?php
 namespace WwtgRealEstate\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
+use wtgRealEstate\Entity\Address;
 
 /**
 * Area
 *
 * @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\AreaRepository")
 * @ORM\Table(name="area")
-* @property int $AreaID
-* @property string $name
 */
-class Area implements InputFilterAwareInterface
+class Area
 {
 
     /**
@@ -28,20 +24,24 @@ class Area implements InputFilterAwareInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $AreaId;
+    protected $area_id;
 
 
     /**
-     * @ORM\Column(type="string", length="45")
+     * @ORM\Column(type="string")
      */
-    protected $name;
+    protected $area_name;
 
 
     /**
-     * @OneToMany(targetEntity="Address", mappedBy="area") @var $areaAddress[]
+     * @ORM\OneToMany(targetEntity="Address", mappedBy="area") @var $areaAddress[]
      */
     protected $areaAddress = null;
 
+
+    public function __construct() {
+        $this->areaAddress = new ArrayCollection();
+    }
 
 
     /**
@@ -91,58 +91,6 @@ class Area implements InputFilterAwareInterface
         $this->area_name = $data['area_name'];
     }
 
-    /* (non-PHPdoc)
-     * @see Zend\InputFilter.InputFilterAwareInterface::setInputFilter()
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception('Not used');
-    }
 
-
-    /* (non-PHPdoc)
-     * @see Zend\InputFilter.InputFilterAwareInterface::getInputFilter()
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-
-
-            //input filter for broker Id
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'area_id',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'Int'),
-                )
-            )));
-
-            //input filter for name of broker
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'area_name',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 45,
-                        ),
-                    ),
-                ),
-            )));
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
 
 }

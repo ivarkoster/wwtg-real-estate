@@ -1,15 +1,16 @@
 <?php
+namespace WwtgRealEstateTest\Controller;
 
-namespace Application\Controller;
-
-use WwtgRealEstate\Controller\RealEstateController;
+use WwtgRealEstateTest\Bootstrap;
+use WwtgRealEstate\Controller\BrokerController;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
+use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use PHPUnit_Framework_TestCase;
 
-class RealEstateControllerTest extends PHPUnit_Framework_TestCase
+class BrokerControllerTest extends PHPUnit_Framework_TestCase
 {
     protected $controller;
     protected $request;
@@ -19,15 +20,18 @@ class RealEstateControllerTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $bootstrap        = \Zend\Mvc\Application::init(include 'config/application.config.php');
-        $this->controller = new RealEstateController();
+        $serviceManager = Bootstrap::getServiceManager();
+        $this->controller = new BrokerController();
         $this->request    = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'index'));
-        $this->event      = $bootstrap->getMvcEvent();
+        $this->event      = new MvcEvent();
+        $config = $serviceManager->get('Config');
+        $routerConfig = isset($config['router']) ? $config['router'] : array();
+        $router = HttpRouter::factory($routerConfig);
+        $this->event->setRouter($router);
         $this->event->setRouteMatch($this->routeMatch);
         $this->controller->setEvent($this->event);
-        $this->controller->setEventManager($bootstrap->getEventManager());
-        $this->controller->setServiceLocator($bootstrap->getServiceManager());
+        $this->controller->setServiceLocator($serviceManager);
     }
 
     public function testIndexActionCanBeAccessed()
@@ -38,7 +42,8 @@ class RealEstateControllerTest extends PHPUnit_Framework_TestCase
         $response = $this->controller->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertInstanceOf('Zend\View\Model\ViewModel', $result);
+
     }
+
 
 }

@@ -4,7 +4,8 @@ namespace WwtgRealEstate\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use wtgRealEstate\Entity\Broker;
+use WwtgRealEstate\Entity\Broker;
+use WwtgRealEstate\Entity\Area;
 
 /**
 * A photo album.
@@ -27,7 +28,7 @@ class Address
     protected $address_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Country", inversedBy="countryAddress")
+     * @ORM\ManyToOne(targetEntity="Country", inversedBy="countryAddress", cascade={"persist"})
      * @Annotation\Exclude()
      */
     protected $country;
@@ -45,7 +46,7 @@ class Address
     protected $location;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(type="string")
      * @Annotation\Required(false)
      * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
@@ -66,16 +67,15 @@ class Address
 
     /**
      * @ORM\Column(type="string", length=45)
-     * @Annotation\Type("Zend\Form\Element\Email")
      * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
      * @Annotation\Options({"label":"Streetname:"})
-     * @Annotation\ErrorMessage("E-mail address did not validate")
      */
     protected $street;
 
     /**
      * @ORM\Column(type="integer")
      * @Annotation\Filter({"name":"Int"})
+     * @Annotation\Validator({"name":"Int"})
      * @Annotation\Attributes({"type":"text"})
      * @Annotation\Options({"label":"House number:"})
      */
@@ -106,7 +106,6 @@ class Address
      * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
      * @Annotation\Attributes({"type":"text"})
      * @Annotation\Options({"label":"City:"})
-     * @Annotation\ErrorMessage("Could not validate E-mail address")
      */
     protected $city;
 
@@ -121,17 +120,29 @@ class Address
     protected $state;
 
     /**
-     * @ORM\OneToMany(targetEntity="Broker", mappedBy="address") @var addressBroker[]
+     * @ORM\OneToMany(targetEntity="Broker", mappedBy="address_id") @var brokerAddress[]
      * @Annotation\Exclude()
      */
-    protected $addressBroker = null;
+    protected $brokerAddress = null;
 
     /**
      * constructor
      */
     public function __construct()
     {
-        $this->addressBroker = new ArrayCollection();
+        $this->brokerAddress = new ArrayCollection();
+    }
+
+
+    public function addBrokerAddress(Broker $broker)
+    {
+        $this->brokerAddress[] = $broker;
+    }
+
+
+    public function getId()
+    {
+        return $this->address_id;
     }
 
     /**
@@ -167,4 +178,20 @@ class Address
         return get_object_vars($this);
     }
 
+    /**
+     * Populate $this from an array
+     *
+     * @param array $data
+     * @return void
+     */
+    public function populate($data = array())
+    {
+        $this->address_id = isset($data['realestate_broker_id']) ? $data['realestate_broker_id'] : null;
+        $this->is_application_owner = isset($data['is_application_owner']) ? $data['is_application_owner'] : null;
+        $this->name                 = isset($data['name']) ? $data['name'] : null;
+        $this->email                = isset($data['email']) ? $data['email'] : null;
+        $this->phone                = isset($data['phone']) ? $data['phone'] : null;
+        $this->mobile               = isset($data['mobile']) ? $data['mobile'] : null;
+        $this->fax                  = isset($data['fax']) ? $data['fax'] : null;
+    }
 }

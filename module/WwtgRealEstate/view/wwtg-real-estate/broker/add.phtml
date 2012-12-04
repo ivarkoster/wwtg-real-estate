@@ -1,28 +1,31 @@
 <?php
-use Zend\View\Helper\EscapeHtml;
 
-$title = 'Add new broker';
+
+$title = 'Add new Address';
 $this->headTitle($title);
 ?>
 
 <h1><?php echo $this->escapeHtml($title)?></h1>
 <?php
 $brokerForm = $this->brokerForm;
-$countryForm = $this->countryForm;
-$brokerForm->setAttribute('action', $this->url('wwtg-real-estate', array('action' => 'add')));
-$brokerForm->prepare();
+$addressForm = $this->addressForm;
+$addressForm->setAttribute('action', $this->url('broker', array('action' => 'add')));
+
+$addressForm->prepare();
 ?>
 
+<?php // if (isset($this->error)) { print_r($this->error); } ?>
 
 
-<?php echo $this->form()->openTag($brokerForm); ?>
+<?php echo $this->form()->openTag($addressForm); ?>
+<?php echo $this->formRow($addressForm->get('csrf')); ?>
 <div >
+<h2>Broker</h2>
 
-<?php echo $this->formHidden($brokerForm->get('RealEstateBrokerId')); ?>
 
-<?php echo $this->formRadio($brokerForm->get('isApplicationOwner')); ?>
+<?php echo $this->formRow($brokerForm->get('is_application_owner')); ?>
 
-<?php echo $this->formRow($brokerForm->get('name')); ?>
+<?php echo $this->formRow($brokerForm->get('broker_name')); ?>
 
 <?php echo $this->formRow($brokerForm->get('email')); ?>
 
@@ -30,17 +33,28 @@ $brokerForm->prepare();
 
 <?php echo $this->formRow($brokerForm->get('mobile')); ?>
 
-
-
-<?php echo $this->formSelect($countryForm->get('name')); ?>
-
-<?php echo $this->formSubmit($brokerForm->get('submit')); ?>
-
-<?php echo $this->form()->closeTag($brokerForm); ?>
+<?php echo $this->formRow($brokerForm->get('fax')); ?>
 
 
 
+<h2>address</h2>
+<?php echo $this->formRow($addressForm->get('longitude')); ?>
 
+<?php echo $this->formRow($addressForm->get('latitude')); ?>
+
+<?php echo $this->formRow($addressForm->get('street')); ?>
+
+<?php echo $this->formRow($addressForm->get('housenr')); ?>
+
+<?php echo $this->formRow($addressForm->get('housenr_ext')); ?>
+
+<?php echo $this->formRow($addressForm->get('postalcode')); ?>
+
+<?php echo $this->formRow($addressForm->get('city')); ?>
+
+<?php echo $this->formRow($addressForm->get('state')); ?>
+<input type="submit">
+<?php echo $this->form()->closeTag(); ?>
 
 
 </div>

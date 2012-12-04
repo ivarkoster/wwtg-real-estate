@@ -1,32 +1,23 @@
 <?php
 namespace WwtgRealEstate\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
-use wtgRealEstate\Entity\Address;
+use Zend\Form\Annotation;
+use WwtgRealEstate\Entity\Address;
+
 /**
 * Photos
 *
 * @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\BrokerRepository")
 * @ORM\Table(name="realestate_broker")
-* @property int $realestate_broker_d
-* @property int $address_id
-* @property int $is_application_owner
-* @property string $name
-* @property string $email
-* @property string $phone
-* @property string $mobile
-* @property string $fax
 */
-class Broker implements InputFilterAwareInterface
+class Broker
 {
-
 
     /**
      * @var Zend\InputFilter\InputFilter
+     * @Annotation\Exclude()
      */
     protected $inputFilter;
 
@@ -34,41 +25,65 @@ class Broker implements InputFilterAwareInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Annotation\Exclude()
      */
     protected $realestate_broker_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="address", inversedBy="addressBroker")
+     * @ORM\ManyToOne(targetEntity="Address", inversedBy="brokerAddress", cascade={"persist"})
+     * @Annotation\Exclude()
      */
     protected $address;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Annotation\Type("Zend\Form\Element\Checkbox")
+     * @Annotation\Options({"label":"Is Application Owner:"})
      */
     protected $is_application_owner;
 
     /**
      * @ORM\Column(type="string")
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Broker Name:"})
      */
     protected $broker_name;
 
     /**
      * @ORM\Column(type="string")
+     * @Annotation\Type("Zend\Form\Element\Email")
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Options({"label":"Email:"})
+     * @Annotation\ErrorMessage("E-mail address did not validate")
      */
     protected $email;
 
     /**
      * @ORM\Column(type="string")
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Phone number:"})
      */
     protected $phone;
 
     /**
      * @ORM\Column(type="string")
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Mobile phone:"})
      */
     protected $mobile;
 
     /**
      * @ORM\Column(type="string")
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Validator({"name":"StringLength", "options":{"min":1, "max":45}})
+     * @Annotation\Attributes({"type":"text"})
+     * @Annotation\Options({"label":"Fax:"})
      */
     protected $fax;
 
@@ -98,10 +113,16 @@ class Broker implements InputFilterAwareInterface
     }
 
 
-    public function setAddress($address)
+    public function setAddress(Address $address)
     {
-        $address->assignedAddress($this);
+        $address->addBrokerAddress($this);
         $this->address = $address;
+    }
+
+
+    public function getAddress()
+    {
+        return $this->address;
     }
 
     /**
@@ -123,136 +144,13 @@ class Broker implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->realestate_broker_id = $data['realestate_broker_id'];
-        $this->is_pplication_owner  = $data['is_application_owner'];
-        $this->name                 = $data['name'];
-        $this->email                = $data['email'];
-        $this->phone                = $data['phone'];
-        $this->mobile               = $data['mobile'];
-        $this->fax                  = $data['fax'];
-    }
-
-
-
-
-    /* (non-PHPdoc)
-     * @see Zend\InputFilter.InputFilterAwareInterface::setInputFilter()
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception('Not used');
-    }
-
-
-    /* (non-PHPdoc)
-     * @see Zend\InputFilter.InputFilterAwareInterface::getInputFilter()
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-
-
-            //input filter for broker Id
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'RealEstateBrokerId',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'Int'),
-                )
-            )));
-
-            //input filter for name of broker
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'name',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 45,
-                        ),
-                    ),
-                ),
-            )));
-
-            //input filter for email address of broker
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'email',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 85,
-                        ),
-                    ),
-                    array(
-                        'name'=> "EmailAddress",
-                    ),
-                ),
-            )));
-
-            //Create a array whit validator pareameters for phone/fax/mobile numbers
-            $phoneFaxValidator =  array(
-                'name'    => "StringLength",
-                'options' => array(
-                    'encoding' => 'UTF-8',
-                    'min'      => 3,
-                    'max'      => 25,
-                ),
-            );
-
-            //input filter for phone
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'phone',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array($phoneFaxValidator),
-            )));
-
-            //input filter for  mobile numbver
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'mobile',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array($phoneFaxValidator),
-            )));
-
-            //input filter for FAX
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'fax',
-                'required' => false,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array($phoneFaxValidator),
-            )));
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
+        $this->realestate_broker_id = isset($data['realestate_broker_id']) ? $data['realestate_broker_id'] : null;
+        $this->is_application_owner = isset($data['is_application_owner']) ? $data['is_application_owner'] : null;
+        $this->broker_name          = isset($data['broker_name']) ? $data['broker_name'] : null;
+        $this->email                = isset($data['email']) ? $data['email'] : null;
+        $this->phone                = isset($data['phone']) ? $data['phone'] : null;
+        $this->mobile               = isset($data['mobile']) ? $data['mobile'] : null;
+        $this->fax                  = isset($data['fax']) ? $data['fax'] : null;
     }
 
 }

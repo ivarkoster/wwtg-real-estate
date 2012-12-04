@@ -1,7 +1,3 @@
-@echo off
-pushd .
-cd %~dp0
-cd "../doctrine/doctrine-module/bin"
-set BIN_TARGET=%CD%\doctrine-module
-popd
+@ECHO OFF
+SET BIN_TARGET=%~dp0\"../doctrine/doctrine-module/bin"\doctrine-module
 php "%BIN_TARGET%" %*

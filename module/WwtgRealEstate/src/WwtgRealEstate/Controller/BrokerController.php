@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityManager;
 use WwtgRealEstate\Entity\Broker;
 use WwtgRealEstate\Entity\Country;
 use WwtgRealEstate\Entity\Address;
+use Zend\Form\Element;
+use Zend\Form\Form;
 
 class BrokerController extends AbstractActionController
 {
@@ -54,92 +56,52 @@ class BrokerController extends AbstractActionController
         return array();
     }
 
-    public function testAction()
+    public function addAction()
     {
-        $address = new Address();
+        $address     = new Address();
+        $broker      = new Broker();
         $builder     = new AnnotationBuilder();
-        $addressForm = $builder->createForm($address);
+        $csrf        = new Element\Csrf('csrf');
+
+        $brokerForm  = $builder->createForm(new Broker());
+        $addressForm = $builder->createForm(new Address());
+        $addressForm->add($csrf);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
 
+            $brokerForm->bind($broker);
             $addressForm->bind($address);
+
+            $brokerForm->setData($request->getPost());
             $addressForm->setData($request->getPost());
 
-            if ( $addressForm->isValid() ) {
+            $addresFormValid = $addressForm->isValid();
+            $brokerFormValid = $brokerForm->isValid();
 
-                print_r($address);
+            if ( $addresFormValid &&  $brokerFormValid ) {
+
 
                 $this->getEntityManager()->persist($address);
                 $this->getEntityManager()->flush();
 
-                //redirect to list of albums
-                return $this->redirect()->toRoute('real-estate');
-            }
-        }
-
-        return array(
-            'error' => $addressForm->getMessages(),
-            'addressForm' => $addressForm,
-        );
-    }
-
-
-    public function addAction()
-    {
-
-        //haal de Broker Web Form op en verander de submit label
-        $brokerForm = new BrokerForm();
-        $brokerForm->get('submit')->setAttribute('label', 'Add');
-
-        $addressForm = new AddressForm();
-
-        //haal de Country Web Form op en vul de landen select box met aanwezige landen
-        $addressForm = new AddressForm();
-        //set countryname select options
-        $countryOptions = $this->getEntityManager()
-            ->getRepository('WwtgRealEstate\Entity\Country')
-            ->selectOptionsArray();
-        $addressForm->get('countryName')->setValueOptions($countryOptions);
-
-
-        $addressForm->get('locationName')->setValueOptions($locationOptions);
-
-        //set AreaName select options
-        $areaOptions = $this->getEntityManager()
-            ->getRepository('WwtgRealEstate\Entity\Area')
-            ->selectOptionsArray();
-        $addressForm->get('locationName')->setValueOptions($areaOptions);
-
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-
-
-            $broker = new Broker();
-            $brokerForm->setInputFilter($broker->getInputFilter());
-            $brokerForm->setData($request->getPost());
-
-            $address = new Address();
-            $addressForm->setInputFilter($address->getInputFilter());
-            $addressForm->setData($request->getPost());
-
-            if ($brokerForm->isValid() && $countryForm->isValid()) {
-
-                $broker->populate($brokerForm->getData());
-
-
+                $broker->setAddress($address);
                 $this->getEntityManager()->persist($broker);
+
                 $this->getEntityManager()->flush();
 
+
+
                 //redirect to list of albums
-                return $this->redirect()->toRoute('real-estate');
+                //return $this->redirect()->toRoute('broker');
             }
         }
 
         return array(
-            'brokerForm' => $brokerForm,
             'addressForm' => $addressForm,
+            'brokerForm' => $brokerForm,
         );
     }
+
+
 }
