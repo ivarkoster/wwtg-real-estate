@@ -8,7 +8,7 @@ use WwtgRealEstate\Entity\Broker;
 use WwtgRealEstate\Entity\Area;
 
 /**
-* An address
+* Address
 *
 * @ORM\Entity
 * @ORM\Table(name="address")

@@ -7,7 +7,7 @@ use Zend\Form\Annotation;
 use WwtgRealEstate\Entity\Address;
 
 /**
-* Photos
+* Real Estate Broker
 *
 * @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\BrokerRepository")
 * @ORM\Table(name="realestate_broker")
