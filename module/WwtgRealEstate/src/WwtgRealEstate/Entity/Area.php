@@ -4,6 +4,7 @@ namespace WwtgRealEstate\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use wtgRealEstate\Entity\Address;
+use Zend\Form\Annotation;
 
 /**
 * Area
@@ -24,7 +25,7 @@ class Area
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $area_id;
+    protected $id;
 
 
     /**

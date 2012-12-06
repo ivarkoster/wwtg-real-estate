@@ -8,7 +8,7 @@ use WwtgRealEstate\Entity\Broker;
 use WwtgRealEstate\Entity\Area;
 
 /**
-* A photo album.
+* An address
 *
 * @ORM\Entity
 * @ORM\Table(name="address")
@@ -24,7 +24,7 @@ class Address
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Annotation\Exclude()
      */
-    protected $address_id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Country", inversedBy="countryAddress", cascade={"persist"})
@@ -119,7 +119,8 @@ class Address
     protected $state;
 
     /**
-     * @ORM\OneToMany(targetEntity="Broker", mappedBy="address") @var brokerAddress[]
+     * @ORM\OneToMany(targetEntity="Broker", mappedBy="address", cascade={"ALL"})
+     * @var Broker[]
      * @Annotation\Exclude()
      */
     protected $brokerAddress = null;
@@ -139,10 +140,6 @@ class Address
     }
 
 
-    public function getId()
-    {
-        return $this->address_id;
-    }
 
     /**
      * Magic getter to expose protected properties

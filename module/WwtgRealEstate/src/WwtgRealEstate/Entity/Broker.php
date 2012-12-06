@@ -14,26 +14,19 @@ use WwtgRealEstate\Entity\Address;
 */
 class Broker
 {
-
-    /**
-     * @var Zend\InputFilter\InputFilter
-     * @Annotation\Exclude()
-     */
-    protected $inputFilter;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Annotation\Exclude()
+     * @Annotation\Type("Zend\Form\Element\Hidden")
      */
-    protected $realestate_broker_id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Address", inversedBy="brokerAddress", cascade={"persist"})
      * @Annotation\Exclude()
      */
-    protected $address;
+    protected $address = null;
 
     /**
      * @ORM\Column(type="boolean")
@@ -88,6 +81,53 @@ class Broker
     protected $fax;
 
 
+    public function __construct()
+    {
+        $this->address = new ArrayCollection();
+    }
+
+
+    public function setAddress(Address $address)
+    {
+
+        $this->address = $address;
+    }
+
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Conver the object to an array.
+     *
+     * @return array:
+     */
+    public function getArrayCopy()
+    {
+        return get_object_vars($this);
+    }
+
+
+
+
+    /**
+     * Populate $this from an array
+     *
+     * @param array $data
+     * @return void
+     */
+    public function populate($data = array())
+    {
+        $this->id                   = isset($data['id']) ? $data['id'] : null;
+        $this->is_application_owner = isset($data['is_application_owner']) ? $data['is_application_owner'] : null;
+        $this->broker_name          = isset($data['broker_name']) ? $data['broker_name'] : null;
+        $this->email                = isset($data['email']) ? $data['email'] : null;
+        $this->phone                = isset($data['phone']) ? $data['phone'] : null;
+        $this->mobile               = isset($data['mobile']) ? $data['mobile'] : null;
+        $this->fax                  = isset($data['fax']) ? $data['fax'] : null;
+    }
+
 
     /**
      * Magic getter to expose protected properties
@@ -112,45 +152,5 @@ class Broker
         $this->$property = $value;
     }
 
-
-    public function setAddress(Address $address)
-    {
-        $address->addBrokerAddress($this);
-        $this->address = $address;
-    }
-
-
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * Conver the object to an array.
-     *
-     * @return array:
-     */
-    public function getArrayCopy()
-    {
-        return get_object_vars($this);
-    }
-
-
-    /**
-     * Populate $this from an array
-     *
-     * @param array $data
-     * @return void
-     */
-    public function populate($data = array())
-    {
-        $this->realestate_broker_id = isset($data['realestate_broker_id']) ? $data['realestate_broker_id'] : null;
-        $this->is_application_owner = isset($data['is_application_owner']) ? $data['is_application_owner'] : null;
-        $this->broker_name          = isset($data['broker_name']) ? $data['broker_name'] : null;
-        $this->email                = isset($data['email']) ? $data['email'] : null;
-        $this->phone                = isset($data['phone']) ? $data['phone'] : null;
-        $this->mobile               = isset($data['mobile']) ? $data['mobile'] : null;
-        $this->fax                  = isset($data['fax']) ? $data['fax'] : null;
-    }
 
 }

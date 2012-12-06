@@ -81,15 +81,19 @@ class BrokerController extends AbstractActionController
 
             if ( $addresFormValid &&  $brokerFormValid ) {
 
+
+
+
                 $broker->setAddress($address);
+
                 $this->getEntityManager()->persist($broker);
                 $this->getEntityManager()->flush();
-
 
 
                 //redirect to list of albums
                 //return $this->redirect()->toRoute('broker');
             }
+
         }
 
         return array(
