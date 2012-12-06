@@ -33,7 +33,7 @@ class Address
     protected $country;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Area", inversedBy="areaAddress")
+     * @ORM\ManyToOne(targetEntity="Area", inversedBy="addressArea")
      * @Annotation\Exclude()
      */
     protected $area;

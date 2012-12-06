@@ -9,6 +9,7 @@ $this->headTitle($title);
 <?php
 $brokerForm = $this->brokerForm;
 $addressForm = $this->addressForm;
+$areaForm = $this->areaForm;
 $addressForm->setAttribute('action', $this->url('broker', array('action' => 'add')));
 
 $addressForm->prepare();
@@ -38,6 +39,8 @@ $addressForm->prepare();
 
 
 <h2>address</h2>
+<?php echo $this->formRow($areaForm->get('area_name')); ?>
+
 <?php echo $this->formRow($addressForm->get('longitude')); ?>
 
 <?php echo $this->formRow($addressForm->get('latitude')); ?>

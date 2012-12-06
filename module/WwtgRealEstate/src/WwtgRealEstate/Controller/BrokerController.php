@@ -9,14 +9,15 @@
 
 namespace WwtgRealEstate\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Form\Annotation\AnnotationBuilder;
 use Doctrine\ORM\EntityManager;
+use WwtgRealEstate\Entity\Address;
+use WwtgRealEstate\Entity\Area;
 use WwtgRealEstate\Entity\Broker;
 use WwtgRealEstate\Entity\Country;
-use WwtgRealEstate\Entity\Address;
+use Zend\Form\Annotation\AnnotationBuilder;
 use Zend\Form\Element;
 use Zend\Form\Form;
+use Zend\Mvc\Controller\AbstractActionController;
 
 class BrokerController extends AbstractActionController
 {
@@ -58,47 +59,60 @@ class BrokerController extends AbstractActionController
 
     public function addAction()
     {
+        //roep de Enteties aan
         $address     = new Address();
         $broker      = new Broker();
+        $area        = new Area();
         $builder     = new AnnotationBuilder();
+
+        //maak een Cros site request forgery beveiliging aan
         $csrf        = new Element\Csrf('csrf');
 
+        //maak aan de hand van de annotaties de form
         $brokerForm  = $builder->createForm(new Broker());
         $addressForm = $builder->createForm(new Address());
+        $areaForm    = $builder->createForm(new Area());
+        //voog CSRF beveiliging toe aan form
         $addressForm->add($csrf);
+        //haal Areas op uit Area repository
+        $areas = $this->getEntityManager()->getRepository('WwtgRealEstate\Entity\Area')->selectOptionsArray();
+        //print_r($areas);
+        //set de option values voor de area select element
+        $areaForm->get('area_name')->setOptions(array('options' => $areas));
 
         $request = $this->getRequest();
         if ($request->isPost()) {
 
+            //Bind de de Forms aan de Entities
             $brokerForm->bind($broker);
             $addressForm->bind($address);
-
+            $areaForm->bind($area);
+            //set post data
             $brokerForm->setData($request->getPost());
             $addressForm->setData($request->getPost());
+            $areaForm->setData($request->getPost());
+            //valideer post data
+            $addresFormValid = $addressForm->isValid(); //bind form
+            $brokerFormValid = $brokerForm->isValid();  //bind form
+            $areaFormValid   = $areForm->isValid();     //bind form
 
-            $addresFormValid = $addressForm->isValid();
-            $brokerFormValid = $brokerForm->isValid();
+            if ( $addresFormValid && $brokerFormValid ) {
 
-            if ( $addresFormValid &&  $brokerFormValid ) {
-
-
-
-
+                //map address entity aan broker entity
                 $broker->setAddress($address);
-
+                //persist en flush
                 $this->getEntityManager()->persist($broker);
                 $this->getEntityManager()->flush();
-
-
                 //redirect to list of albums
                 //return $this->redirect()->toRoute('broker');
             }
 
         }
-
+        //geef data door aan view
         return array(
             'addressForm' => $addressForm,
             'brokerForm' => $brokerForm,
+            'areaForm' => $areaForm,
         );
     }
 

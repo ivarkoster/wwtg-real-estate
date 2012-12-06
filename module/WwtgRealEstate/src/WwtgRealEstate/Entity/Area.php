@@ -24,20 +24,24 @@ class Area
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Annotation\Type("Zend\Form\Element\Hidden")
      */
     protected $id;
 
 
     /**
      * @ORM\Column(type="string")
+     * @Annotation\Type("Zend\Form\Element\Select")
+     * @Annotation\Filter({"name":"StringTrim", "name":"StripTags"})
+     * @Annotation\Options({"label":"Area:"})
      */
     protected $area_name;
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Address", mappedBy="area") @var $areaAddress[]
+     * @ORM\OneToMany(targetEntity="Address", mappedBy="area") @var $addressArea[]
      */
-    protected $areaAddress = null;
+    protected $addressArea = null;
 
 
     public function __construct() {
