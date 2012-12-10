@@ -7,10 +7,17 @@ use Doctrine\ORM\EntityRepository;
 class AreaRepository extends EntityRepository
 {
 
-    public function selectOptionsArray()
+    public function selectOptionsArray(array $country = null)
     {
-        $dql = "SELECT a.id, a.area_name FROM WwtgRealEstate\Entity\Area a";
+        if (isset($country)){
+            $where = 'WHERE country_id IN (:cids)';
+        }
+
+        $dql = "SELECT a.id, a.area_name FROM WwtgRealEstate\Entity\Area a $where";
         $query = $this->getEntityManager()->createQuery($dql);
+        if (isset($country)) {
+            $query->setParameter('cids', $country);
+        }
         $areas = $query->getResult();
 
         foreach ($areas as $area) {
