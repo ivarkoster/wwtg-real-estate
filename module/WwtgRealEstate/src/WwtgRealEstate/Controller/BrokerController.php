@@ -83,7 +83,6 @@ class BrokerController extends AbstractActionController
         //Bind de de Forms aan de Entities
         $brokerForm->bind($broker);
         $addressForm->bind($address);
-        $areaForm->bind($area);
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -100,7 +99,9 @@ class BrokerController extends AbstractActionController
 
             if ( $addresFormValid  && $brokerFormValid && $areaFormValid) {
 
-                print_r($broker);
+                $areaId = $request->getPost('area_name');
+                $area = $this->getEntityManager()->find('WwtgRealEstate\Entity\Area', $areaId);
+                $address->setArea($area);
                 //map address entity aan broker entity
                 $broker->setAddress($address);
                 //persist en flush
@@ -110,7 +111,7 @@ class BrokerController extends AbstractActionController
                 //return $this->redirect()->toRoute('broker');
             } else {
 
-                foreach ($brokerForm->getMessages() as $messageId => $message) {
+                /* foreach ($brokerForm->getMessages() as $messageId => $message) {
                     echo "Broker validation failure '$messageId': $message<br />\n";
                 }
 
@@ -120,7 +121,7 @@ class BrokerController extends AbstractActionController
 
                 foreach ($areaForm->getMessages() as $messageId => $message) {
                     echo "Area validation failure '$messageId': $message<br />\n";
-                }
+                } */
             }
 
         }

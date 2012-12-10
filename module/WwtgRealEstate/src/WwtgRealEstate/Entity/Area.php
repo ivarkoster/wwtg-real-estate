@@ -43,8 +43,9 @@ class Area
 
 
     public function __construct() {
-        $this->areaAddress = new ArrayCollection();
+        $this->addressArea = new ArrayCollection();
     }
+
 
 
     /**
@@ -90,7 +91,7 @@ class Area
      */
     public function populate($data = array())
     {
-        $this->area_id   = $data['area_id'];
+        $this->id        = $data['id'];
         $this->area_name = $data['area_name'];
     }
 

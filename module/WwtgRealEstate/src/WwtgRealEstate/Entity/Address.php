@@ -33,7 +33,7 @@ class Address
     protected $country;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Area", inversedBy="addressArea")
+     * @ORM\ManyToOne(targetEntity="Area", inversedBy="addressArea", cascade={"persist"})
      * @Annotation\Exclude()
      */
     protected $area;
@@ -131,6 +131,7 @@ class Address
     public function __construct()
     {
         $this->brokerAddress = new ArrayCollection();
+        $this->brokerAddress = new ArrayCollection();
     }
 
 
@@ -139,7 +140,15 @@ class Address
         $this->brokerAddress[] = $broker;
     }
 
+   public function setArea(Area $area)
+    {
+        $this->area = $area;
+    }
 
+    public function getArea()
+    {
+        return $this->area;
+    }
 
     /**
      * Magic getter to expose protected properties
