@@ -18,6 +18,7 @@ class Broker
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Annotation\Required(false)
      * @Annotation\Type("Zend\Form\Element\Hidden")
      */
     protected $id;

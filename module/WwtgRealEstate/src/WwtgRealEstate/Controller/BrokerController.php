@@ -80,13 +80,15 @@ class BrokerController extends AbstractActionController
         //set de option values voor de area select element
         $areaForm->get('area_name')->setOptions(array('options' => $areas));
 
+        //Bind de de Forms aan de Entities
+        $brokerForm->bind($broker);
+        $addressForm->bind($address);
+        $areaForm->bind($area);
+
         $request = $this->getRequest();
         if ($request->isPost()) {
 
-            //Bind de de Forms aan de Entities
-            $brokerForm->bind($broker);
-            $addressForm->bind($address);
-            $areaForm->bind($area);
+
             //set post data
             $brokerForm->setData($request->getPost());
             $addressForm->setData($request->getPost());
@@ -94,10 +96,11 @@ class BrokerController extends AbstractActionController
             //valideer post data
             $addresFormValid = $addressForm->isValid(); //bind form
             $brokerFormValid = $brokerForm->isValid();  //bind form
-            $areaFormValid   = $areForm->isValid();     //bind form
+            $areaFormValid   = $areaForm->isValid();     //bind form
 
-            if ( $addresFormValid && $brokerFormValid ) {
+            if ( $addresFormValid  && $brokerFormValid && $areaFormValid) {
 
+                print_r($broker);
                 //map address entity aan broker entity
                 $broker->setAddress($address);
                 //persist en flush
@@ -105,6 +108,19 @@ class BrokerController extends AbstractActionController
                 $this->getEntityManager()->flush();
                 //redirect to list of albums
                 //return $this->redirect()->toRoute('broker');
+            } else {
+
+                foreach ($brokerForm->getMessages() as $messageId => $message) {
+                    echo "Broker validation failure '$messageId': $message<br />\n";
+                }
+
+                foreach ($addressForm->getMessages() as $messageId => $message) {
+                    echo "Address validation failure '$messageId': $message<br />\n";
+                }
+
+                foreach ($areaForm->getMessages() as $messageId => $message) {
+                    echo "Area validation failure '$messageId': $message<br />\n";
+                }
             }
 
         }

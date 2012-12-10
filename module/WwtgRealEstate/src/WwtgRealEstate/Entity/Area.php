@@ -15,15 +15,12 @@ use Zend\Form\Annotation;
 class Area
 {
 
-    /**
-     * @var Zend\InputFilter\InputFilter
-     */
-    protected $inputFilter;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Annotation\Required(false)
      * @Annotation\Type("Zend\Form\Element\Hidden")
      */
     protected $id;
@@ -39,7 +36,8 @@ class Area
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Address", mappedBy="area") @var $addressArea[]
+     * @ORM\OneToMany(targetEntity="Address", mappedBy="area", cascade={"ALL"}) @var $addressArea[]
+     * @Annotation\Exclude()
      */
     protected $addressArea = null;
 
