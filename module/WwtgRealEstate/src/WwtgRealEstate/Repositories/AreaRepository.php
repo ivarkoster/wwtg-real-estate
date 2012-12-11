@@ -10,13 +10,13 @@ class AreaRepository extends EntityRepository
     public function selectOptionsArray(array $country = null)
     {
         if (isset($country)){
-            $where = 'WHERE country_id IN (:cids)';
+            $where = 'WHERE a.country IN (:cids)';
         }
 
         $dql = "SELECT a.id, a.area_name FROM WwtgRealEstate\Entity\Area a $where";
         $query = $this->getEntityManager()->createQuery($dql);
         if (isset($country)) {
-            $query->setParameter('cids', $country);
+            $query->setParameter(':cids', $country);
         }
         $areas = $query->getResult();
 

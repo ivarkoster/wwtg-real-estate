@@ -74,11 +74,17 @@ class BrokerController extends AbstractActionController
         $areaForm    = $builder->createForm(new Area());
         //voog CSRF beveiliging toe aan form
         $addressForm->add($csrf);
+
+        $countryFilter = array(
+            1, //ARUBA
+            2, //BONAIRE
+        );
         //haal Areas op uit Area repository
-        $areas = $this->getEntityManager()->getRepository('WwtgRealEstate\Entity\Area')->selectOptionsArray();
-        //print_r($areas);
-        //set de option values voor de area select element
-        $areaForm->get('area_name')->setOptions(array('options' => $areas));
+        $areas = $this->getEntityManager()
+            ->getRepository('WwtgRealEstate\Entity\Area')
+            ->selectOptionsArray($countryFilter);
+        $areaForm->get('area_name')
+            ->setOptions(array('options' => $areas));
 
         //Bind de de Forms aan de Entities
         $brokerForm->bind($broker);
@@ -97,8 +103,8 @@ class BrokerController extends AbstractActionController
             $brokerFormValid = $brokerForm->isValid();  //bind form
             $areaFormValid   = $areaForm->isValid();     //bind form
 
-            if ( $addresFormValid  && $brokerFormValid && $areaFormValid) {
-
+            if ( $addresFormValid  && $brokerFormValid && $areaFormValid)
+            {
                 $areaId = $request->getPost('area_name');
                 $area = $this->getEntityManager()->find('WwtgRealEstate\Entity\Area', $areaId);
                 $address->setArea($area);
@@ -109,19 +115,6 @@ class BrokerController extends AbstractActionController
                 $this->getEntityManager()->flush();
                 //redirect to list of albums
                 //return $this->redirect()->toRoute('broker');
-            } else {
-
-                /* foreach ($brokerForm->getMessages() as $messageId => $message) {
-                    echo "Broker validation failure '$messageId': $message<br />\n";
-                }
-
-                foreach ($addressForm->getMessages() as $messageId => $message) {
-                    echo "Address validation failure '$messageId': $message<br />\n";
-                }
-
-                foreach ($areaForm->getMessages() as $messageId => $message) {
-                    echo "Area validation failure '$messageId': $message<br />\n";
-                } */
             }
 
         }

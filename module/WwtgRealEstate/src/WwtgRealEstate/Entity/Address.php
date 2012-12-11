@@ -22,7 +22,10 @@ class Address
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Annotation\Exclude()
+     * @Annotation\Required(false)
+     * @Annotation\Filter({"name":"Int"})
+     * @Annotation\Validator({"name":"Int"})
+     * @Annotation\Attributes({"type":"Hidden"})
      */
     protected $id;
 

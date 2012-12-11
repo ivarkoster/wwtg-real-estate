@@ -1,44 +1,52 @@
 <?php
 namespace WwtgRealEstate\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
-
+use Zend\Form\Annotation;
+use WwtgRealEstate\Entity\Broker;
+use WwtgRealEstate\Entity\Area;
 /**
 * Country
 *
 * @ORM\Entity(repositoryClass="WwtgRealEstate\Repositories\CountryRepository")
 * @ORM\Table(name="country")
-* @property int $country_id
-* @property string $country_name
+
 */
-class Country implements InputFilterAwareInterface
+class Country
 {
 
-    /**
-     * @var Zend\InputFilter\InputFilter
-     */
-    protected $inputFilter;
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Annotation\Required(false)
      */
-    protected $country_id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Annotation\
      */
     protected $country_name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Address", mappedBy="country") @var $countryAddress[]
+     * @ORM\OneToMany(targetEntity="Address", mappedBy="country") @var $addressCountry[]
      */
-    protected $countryAddress = null;
+    protected $addressCountry = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Area", mappedBy="country") @var $areaCountry[]
+     */
+    protected $areaCountry = null;
+
+
+    public function __construct()
+    {
+        $addressCountry = new ArrayCollection();
+        $areaCountry    = new ArrayCollection();
+    }
 
     /**
      * Magic getter to expose protected properties
@@ -81,62 +89,10 @@ class Country implements InputFilterAwareInterface
      */
     public function populate($data = array())
     {
-        $this->country_id   = $data['country_id'];
+        $this->id           = $data['id'];
         $this->country_name = $data['country_name'];
     }
 
-    /* (non-PHPdoc)
-     * @see Zend\InputFilter.InputFilterAwareInterface::setInputFilter()
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception('Not used');
-    }
 
-
-    /* (non-PHPdoc)
-     * @see Zend\InputFilter.InputFilterAwareInterface::getInputFilter()
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-
-
-            //input filter for broker Id
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'CountryId',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'Int'),
-                )
-            )));
-
-            //input filter for name of broker
-            $inputFilter->add($factory->createInput(array(
-                'name'     => 'name',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => "StringLength",
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 45,
-                        ),
-                    ),
-                ),
-            )));
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
 
 }

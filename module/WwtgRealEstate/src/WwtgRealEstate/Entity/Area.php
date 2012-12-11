@@ -25,6 +25,11 @@ class Area
      */
     protected $id;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Country", inversedBy="areaCountry", cascade={"persist"})
+     * @Annotation\Exclude()
+     */
+    protected $country;
 
     /**
      * @ORM\Column(type="string")
@@ -46,6 +51,17 @@ class Area
         $this->addressArea = new ArrayCollection();
     }
 
+
+
+    public function setCountry(Country $country)
+    {
+        $this->country = $country;
+    }
+
+    public function getCountry()
+    {
+        return $this->country;
+    }
 
 
     /**
