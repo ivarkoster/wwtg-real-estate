@@ -26,8 +26,22 @@ return array(
         'admin' => array(
             //And finally, here is where we define our page hierarchy
             'Resident' => array(
-                'label' => 'Resident',
+                'label' => 'Residents',
                 'route' => 'zfcadmin/resident-admin',
+                'pages' => array(
+                    'Add' => array(
+                        'label' => 'Add Resident',
+                        'route' => 'add',
+                    ),
+                    'Delete' => array(
+                        'label' => 'Delete Resident',
+                        'route' => 'delete',
+                    ),
+                ),
+            ),
+            'Broker' => array(
+                'label' => 'Brokers',
+                'route' => 'zfcadmin/broker',
                 'pages' => array(
                     'Add' => array(
                         'label' => 'Add Resident',

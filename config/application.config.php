@@ -5,10 +5,11 @@ return array(
         'ZfcBase',
         'DoctrineModule',
         'DoctrineORMModule',
-        'ZfcAdmin',
         'ZfcBase',
         'ZfcUser',
         'ZfcUserDoctrineORM',
+        'BjyAuthorize',
+        'ZfcAdmin',
         'WwtgRealEstate'
     ),
     'module_listener_options' => array(

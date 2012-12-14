@@ -62,6 +62,22 @@ return array(
                             ),
                         ),
                     ),
+                    'broker' => array(
+                        'type' => 'segment',
+                        'may_terminate' => true,
+                        'options' => array(
+                            'route' => '/broker[/:action][/:id]',
+                            'constraints' => array(
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[0-9]+',
+                            ),
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'WwtgRealEstate\Controller',
+                                'controller' => 'Broker',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ),
